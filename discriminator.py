@@ -8,6 +8,7 @@ from typing import Tuple
 # 5x5 256 chan BNorm ReLU
 # 512 FC BNorm ReLU
 # 1 FC sigmoid
+# NOTE: may needs to set bias on conv layers to False.
 
 
 def _conv_2d_block(in_chan: int, out_chan: int, kernel: Tuple[int, int]):
@@ -21,6 +22,7 @@ def _conv_2d_block(in_chan: int, out_chan: int, kernel: Tuple[int, int]):
 class Discriminator(nn.Module):
     def __init__(self):
         super(Discriminator, self).__init__()
+        # not sure what the input is supposed to be.
         self.conv1 = _conv_2d_block(3, 32, (5, 5))
         self.conv2 = _conv_2d_block(32, 128, (5, 5))
         self.conv3 = _conv_2d_block(128, 256, (5, 5))
@@ -30,9 +32,7 @@ class Discriminator(nn.Module):
             nn.BatchNorm2d(512, eps=1e-5, momentum=0.9),
             nn.ReLU(inplace=True),
         )
-        self.dense2 = nn.Sequential(
-            nn.Linear(512, 1),
-            nn.Sigmoid())
+        self.dense2 = nn.Sequential(nn.Linear(512, 1), nn.Sigmoid())
 
     def forward(self, x):
         out = self.conv1(x)

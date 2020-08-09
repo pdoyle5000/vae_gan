@@ -8,7 +8,9 @@ from typing import Tuple
 # 2048 FC BNorm ReLU
 
 
-def _conv_2d_block(in_chan: int, out_chan: int, kernel: Tuple[int, int]):
+def _conv_2d_block(
+    in_chan: int, out_chan: int, kernel: Tuple[int, int]
+) -> nn.Sequential:
     return nn.Sequential(
         nn.Conv2d(in_chan, out_chan, kernel),
         nn.BatchNorm2d(out_chan, eps=1e-5, momentum=0.9),

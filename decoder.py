@@ -9,7 +9,9 @@ from typing import Tuple
 # 5x5 3 chan tanh
 
 
-def _conv_transpose_block(in_chan: int, out_chan: int, kernel: Tuple[int, int]):
+def _conv_transpose_block(
+    in_chan: int, out_chan: int, kernel: Tuple[int, int]
+) -> nn.Sequential:
     return nn.Sequential(
         nn.ConvTranspose2d(in_chan, out_chan, kernel),
         nn.BatchNorm2d(out_chan, eps=1e-5, momentum=0.9),
@@ -25,7 +27,7 @@ class Decoder(nn.Module):
             nn.BatchNorm2d(8 * 8 * 256, eps=1e-5, momentum=0.9),
             nn.ReLU(inplace=True),
         )
-        # the input might be 1 channel.
+        # the input might be 1 channel. POSSIBLE ISSUEE
         self.conv1 = _conv_transpose_block(8 * 8 * 256, 256, (5, 5))
         self.conv2 = _conv_transpose_block(256, 128, (5, 5))
         self.conv3 = _conv_transpose_block(128, 32, (5, 5))
